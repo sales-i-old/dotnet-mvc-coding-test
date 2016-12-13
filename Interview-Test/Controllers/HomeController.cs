@@ -1,30 +1,66 @@
-﻿using System;
+﻿using Entity;
+using Interview_Test.Utility;
+using Interview_Test.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
 
 namespace Interview_Test.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        private TaskApiClient taskClient;
+
+        public HomeController()
         {
-            return View();
+            // Should use DI
+            taskClient = new TaskApiClient();
         }
 
-        public ActionResult About()
+        public async Task<ActionResult> Index()
         {
-            ViewBag.Message = "Your application description page.";
+            IndexViewModel viewModel = new IndexViewModel();
 
-            return View();
+            IEnumerable<TaskItem> tasks = await taskClient.GetAllTasks();
+
+            if (tasks != null)
+            {
+                viewModel.TaskList = tasks;
+            }
+
+            return View(viewModel);
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        public async Task<ActionResult> Create(IndexViewModel viewModel)
         {
-            ViewBag.Message = "Your contact page.";
+            if (ModelState.IsValid)
+            {
 
-            return View();
+                Uri taskLocation = await taskClient.CreateTask(viewModel.CreateTaskModel);
+
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
+
+        public async Task<ActionResult> Detail(string id)
+        {
+            TaskItem task = await taskClient.GetTaskById(id);
+            return View(task);
+        }
+        [HttpPost]
+        public async Task<ActionResult> Detail(TaskItem task)
+        {
+            bool updated = await taskClient.Update(task);
+            return RedirectToAction("Index");
+        }
+
     }
 }
