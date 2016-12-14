@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Interview_Test.ViewModel
 {
@@ -14,6 +15,13 @@ namespace Interview_Test.ViewModel
         public IEnumerable<TaskItem> TaskList
         { get; set; }
 
+        public IEnumerable<SelectListItem> SelectTaskList
+        { get; set; }
+
+       
+
+        public int MyProperty { get; set; }
+
         public IndexViewModel()
         {
             // Instantiate TaskItem ready to be populated if required
@@ -21,6 +29,7 @@ namespace Interview_Test.ViewModel
 
             // Instantiate TaskList ready for tasks (if there are any)
             TaskList = new List<TaskItem>();
+
         }
     }
 }

@@ -29,6 +29,8 @@ namespace Interview_Test.Controllers
             if (tasks != null)
             {
                 viewModel.TaskList = tasks;
+
+                viewModel.SelectTaskList = tasks.Select(t => new SelectListItem() { Text = t.Title, Value = t.Id.ToString() });
             }
 
             return View(viewModel);
@@ -57,6 +59,13 @@ namespace Interview_Test.Controllers
         }
         [HttpPost]
         public async Task<ActionResult> Detail(TaskItem task)
+        {
+            bool updated = await taskClient.Update(task);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Save(TaskItem task)
         {
             bool updated = await taskClient.Update(task);
             return RedirectToAction("Index");

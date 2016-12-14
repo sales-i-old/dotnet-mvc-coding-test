@@ -23,5 +23,9 @@ namespace Entity
 
         public bool Complete
         { get; set; }
+
+        public Guid? DependentTaskId
+        { get; set; }
+
     }
 }

@@ -14,10 +14,10 @@ namespace Interview_Test.Utility
 
         public ApiClient()
         {
-            //string baseUrl = "http://localhost:3411/task/";
+            string baseUrl = "http://localhost:3411/task/";
 
             // trying something that will break the project, remove this line below!
-            string baseUrl = "http://CHRIS-PC/";
+            //string baseUrl = "http://CHRIS-PC/";
 
             client = new HttpClient();
             client.BaseAddress = new Uri(baseUrl);
