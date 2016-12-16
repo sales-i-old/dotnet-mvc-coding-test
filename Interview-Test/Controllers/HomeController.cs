@@ -55,11 +55,12 @@ namespace Interview_Test.Controllers
             TaskItem task = await taskClient.GetTaskById(id);
             return View(task);
         }
+
         [HttpPost]
         public async Task<ActionResult> Detail(TaskItem task)
         {
             bool updated = await taskClient.Update(task);
-            return RedirectToAction("Index");
+            return RedirectToAction("Detail", new { id = task.Id});
         }
 
     }
