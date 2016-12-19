@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using DataAccess.Factory;
+using DataAccess.Service;
+using Entity;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
-using Entity;
-using DataAccess.Service;
-using DataAccess.Factory;
 using System.Web.Http.Description;
-using System;
 
 namespace TaskAPI.Controllers
 {
@@ -28,8 +27,8 @@ namespace TaskAPI.Controllers
         {
             // get all tasks
             IEnumerable<TaskItem> tasks = taskService.GetAllTasks();
-            
-            return Ok(tasks);
+
+            return Ok(tasks.ToList());
         }
 
         [ResponseType(typeof(TaskItem))]
@@ -44,7 +43,7 @@ namespace TaskAPI.Controllers
             catch (Exception ex)
             {
                 return NotFound();
-            }            
+            }
         }
 
         [HttpPost]
@@ -63,16 +62,37 @@ namespace TaskAPI.Controllers
         [HttpPut]
         public IHttpActionResult UpdateTask(TaskItem task)
         {
-            
             if (task == null)
             {
                 return BadRequest("Task not received");
             }
 
-              taskService.UpdateTask(task);
+            if (task.Complete)
+            {
+                if (!CanCompleteTask(task))
+                {
+                    return BadRequest("Cannot complete this task some dependent task are not completed");
+                }
+            }
 
-            return CreatedAtRoute("GetTaskById", task.Id.ToString(), task);
+            taskService.UpdateTask(task);
+
+            return Ok();
+
         }
 
+        private bool CanCompleteTask(TaskItem task)
+        {
+            var canComplete = true;
+
+            IEnumerable<TaskItem> allTasks = taskService.GetAllTasks();
+
+            if (task.DependentTasks?.Count() > 0 && allTasks != null)
+            {
+                canComplete = !allTasks.Where(t => task.DependentTasks.Select(d => d.DependentTaskItemId).Contains(t.Id) && !t.Complete).Any();
+            }
+
+            return canComplete;
+        }
     }
 }

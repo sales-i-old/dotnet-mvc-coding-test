@@ -10,8 +10,9 @@ namespace DataAccess
 {
     public class TaskDbContext : DbContext
     {
-        public DbSet<TaskItem> Tasks
-        { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
+
+        public DbSet<DependentTask> DependentTasks { get; set; }
 
         public TaskDbContext() : base("TaskDbContext")
         { }

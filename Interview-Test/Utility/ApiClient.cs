@@ -24,6 +24,5 @@ namespace Interview_Test.Utility
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
-        
     }
 }
