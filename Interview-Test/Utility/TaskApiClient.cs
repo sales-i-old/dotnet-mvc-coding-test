@@ -1,4 +1,6 @@
-﻿using Entity;
+﻿using DataAccess.Factory;
+using DataAccess.Service;
+using Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +12,12 @@ namespace Interview_Test.Utility
 {
     public class TaskApiClient : ApiClient
     {
+       
         public async Task<IEnumerable<TaskItem>> GetAllTasks()
         {
             IEnumerable<TaskItem> tasks = null;
 
-            HttpResponseMessage response = await client.GetAsync("");
+            HttpResponseMessage response = await client.GetAsync(client.BaseAddress);
 
             if (response.IsSuccessStatusCode)
             {

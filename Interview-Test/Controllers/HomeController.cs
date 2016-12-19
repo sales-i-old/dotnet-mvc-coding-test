@@ -75,6 +75,7 @@ namespace Interview_Test.Controllers
         [HttpPost]
         public async Task<ActionResult> Detail(DetailViewModel viewModel)
         {
+
             if (viewModel.DependentTask != null)
             {
                 viewModel.EditedTaskItem.DependentTasks = viewModel.DependentTask.Select(t => new DependentTask

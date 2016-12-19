@@ -78,6 +78,7 @@ namespace TaskAPI.Controllers
             taskService.UpdateTask(task);
 
             return Ok();
+
         }
 
         private bool CanCompleteTask(TaskItem task)

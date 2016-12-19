@@ -27,5 +27,6 @@ namespace Entity
         { get; set; }
 
         public virtual ICollection<DependentTask> DependentTasks { get; set; }
+
     }
 }
