@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201612160854099_addHierarchy.Designer.cs">
       <DependentUpon>201612160854099_addHierarchy.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612190942490_samuel.cs" />
+    <Compile Include="Migrations\201612190942490_samuel.Designer.cs">
+      <DependentUpon>201612190942490_samuel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ITaskService.cs" />
@@ -95,6 +99,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612160854099_addHierarchy.resx">
       <DependentUpon>201612160854099_addHierarchy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612190942490_samuel.resx">
+      <DependentUpon>201612190942490_samuel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
