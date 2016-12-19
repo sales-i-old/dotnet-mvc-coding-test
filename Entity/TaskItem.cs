@@ -7,9 +7,11 @@ using System.Web;
 
 namespace Entity
 {
+    [Serializable]
     public class TaskItem
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid Id
         { get; set; }
 
@@ -23,5 +25,7 @@ namespace Entity
 
         public bool Complete
         { get; set; }
+
+        public virtual ICollection<DependentTask> DependentTasks { get; set; }
     }
 }

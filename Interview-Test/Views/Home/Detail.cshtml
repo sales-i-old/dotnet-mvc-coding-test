@@ -1,43 +1,52 @@
-﻿@model Entity.TaskItem
+﻿@model Interview_Test.ViewModel.DetailViewModel
 
 @{
     ViewBag.Title = "Edit Task";
 }
 
-<h2>Edit a task</h2>
+<link href="@Url.Content("~/Content/css/select2.min.css")" r rel="stylesheet" />
 
+<h2>Edit a task</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.EditedTaskItem.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EditedTaskItem.Title, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EditedTaskItem.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EditedTaskItem.Title, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EditedTaskItem.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EditedTaskItem.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EditedTaskItem.Description, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Complete, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EditedTaskItem.Complete, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
-                    @Html.EditorFor(model => model.Complete)
-                    @Html.ValidationMessageFor(model => model.Complete, "", new { @class = "text-danger" })
+
+                    @Html.EditorFor(model => model.EditedTaskItem.Complete)
+                    @Html.ValidationMessageFor(model => model.EditedTaskItem.Complete, "", new { @class = "text-danger" })
                 </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EditedTaskItem.DependentTasks, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ListBoxFor(m => m.DependentTask, Model.TasksToselect, new { multiple = "true", style = "width:300px", id = "taskSelector" })
             </div>
         </div>
 
@@ -55,4 +64,14 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="@Url.Content("~/Scripts/select2.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#taskSelector").select2();
+        });
+    </script>
+
 }

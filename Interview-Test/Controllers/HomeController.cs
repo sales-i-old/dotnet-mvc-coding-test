@@ -4,9 +4,9 @@ using Interview_Test.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Threading.Tasks;
 
 namespace Interview_Test.Controllers
 {
@@ -39,7 +39,6 @@ namespace Interview_Test.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 Uri taskLocation = await taskClient.CreateTask(viewModel.CreateTaskModel);
 
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
@@ -52,15 +51,61 @@ namespace Interview_Test.Controllers
 
         public async Task<ActionResult> Detail(string id)
         {
+            Guid editedTaskId;
+
+            if (!Guid.TryParse(id, out editedTaskId))
+            {
+                return RedirectToAction("Index");
+            }
+
             TaskItem task = await taskClient.GetTaskById(id);
-            return View(task);
+
+            ///Get all Task for selection
+            var tasks = await taskClient.GetAllTasks();
+
+            var viewModel = new DetailViewModel();
+            // should use a view builder
+            viewModel.TasksToselect = GetTaskToSelect(task.Id, tasks);
+            viewModel.EditedTaskItem = task;
+            viewModel.DependentTask = task.DependentTasks.Select(t => t.DependentTaskItemId);
+
+            return View(viewModel);
         }
+
         [HttpPost]
-        public async Task<ActionResult> Detail(TaskItem task)
+        public async Task<ActionResult> Detail(DetailViewModel viewModel)
         {
-            bool updated = await taskClient.Update(task);
+            if (viewModel.DependentTask != null)
+            {
+                viewModel.EditedTaskItem.DependentTasks = viewModel.DependentTask.Select(t => new DependentTask
+                {
+                    DependentTaskItemId = t,
+                    TaskItemId = viewModel.EditedTaskItem.Id
+                }).ToList();
+            }
+
+            var updated = await taskClient.Update(viewModel.EditedTaskItem);
+
+            if (!updated)
+            {
+                ModelState.AddModelError(string.Empty, "Unable to update task, make sure all dependent task are completed.");
+
+                // would have been cache in Live application
+                var tasks = await taskClient.GetAllTasks();
+                viewModel.TasksToselect = GetTaskToSelect(viewModel.EditedTaskItem.Id, tasks);
+                return View(viewModel);
+            }
+
             return RedirectToAction("Index");
         }
 
+        private IEnumerable<SelectListItem> GetTaskToSelect(Guid editedTaskId, IEnumerable<TaskItem> tasks)
+        {
+            return tasks?.Where(t => t.Id != editedTaskId).Select(t => new SelectListItem
+            {
+                Text = t.Title,
+                Value = t.Id.ToString()
+            });
+        }
     }
 }
